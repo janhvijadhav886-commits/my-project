@@ -1,0 +1,187 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta name="description" content="NTRO Dark Web Threat Actor De-Anonymization and Attribution Intelligence Analysis Platform (SIH-26151)">
+  <title>{% block title %}NTRO Cyber Threat Intelligence Platform{% endblock %}</title>
+
+  <!-- Google Fonts: Space Grotesk, Plus Jakarta Sans, JetBrains Mono -->
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;600;700&family=Plus+Jakarta+Sans:wght@300;400;500;600;700;800&family=Space+Grotesk:wght@500;600;700&display=swap" rel="stylesheet">
+
+  <!-- FontAwesome Icons -->
+  <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.4.2/css/all.min.css">
+
+  <!-- Chart.js & Cytoscape.js -->
+  <script src="https://cdn.jsdelivr.net/npm/chart.js"></script>
+  <script src="https://cdnjs.cloudflare.com/ajax/libs/cytoscape/3.26.0/cytoscape.min.js"></script>
+
+  <!-- Custom Design System -->
+  <link rel="stylesheet" href="{{ url_for('static', filename='css/style.css') }}">
+  {% block extra_css %}{% endblock %}
+</head>
+<body>
+
+  <!-- Ambient Holographic Background Elements -->
+  <div class="ambient-glow ambient-glow-1"></div>
+  <div class="ambient-glow ambient-glow-2"></div>
+  <div class="cyber-grid-overlay"></div>
+
+  <!-- App Wrapper -->
+  <div class="app-container">
+
+    <!-- Sidebar Navigation -->
+    <aside class="sidebar" id="sidebar">
+      <div class="sidebar-header">
+        <div class="brand-avatar-seal">
+          <img src="{{ url_for('static', filename='images/ntro_insignia.jpg') }}" alt="NTRO Cyber Defense Insignia" class="sidebar-insignia-img">
+          <span class="insignia-ring"></span>
+        </div>
+        <div class="brand-text-block">
+          <div class="brand-title">NTRO <span>DE-ANON</span></div>
+          <div class="brand-subtitle"><span class="badge-dot-live"></span> CYBER INTEL • PS-26151</div>
+        </div>
+      </div>
+
+      <div class="sidebar-nav">
+        <div class="nav-category">Command & Control</div>
+        <a href="/" class="nav-link {% if active_page == 'dashboard' %}active{% endif %}" id="nav-dashboard">
+          <i class="fa-solid fa-gauge-high"></i>
+          <span>SOC Dashboard</span>
+          <span class="nav-pill-badge">LIVE</span>
+        </a>
+        
+        <div class="nav-category">Attribution Intelligence</div>
+        <a href="/actors" class="nav-link {% if active_page == 'actors' %}active{% endif %}" id="nav-actors">
+          <i class="fa-solid fa-user-secret"></i>
+          <span>Threat Actors</span>
+        </a>
+        <a href="/infrastructure" class="nav-link {% if active_page == 'infrastructure' %}active{% endif %}" id="nav-infrastructure">
+          <i class="fa-solid fa-server"></i>
+          <span>Passive Infrastructure</span>
+        </a>
+        <a href="/relationships" class="nav-link {% if active_page == 'relationships' %}active{% endif %}" id="nav-relationships">
+          <i class="fa-solid fa-diagram-project"></i>
+          <span>Relationship Graph</span>
+        </a>
+        <a href="/persona" class="nav-link {% if active_page == 'persona' %}active{% endif %}" id="nav-persona">
+          <i class="fa-solid fa-fingerprint"></i>
+          <span>Persona Stylometry</span>
+        </a>
+
+        <div class="nav-category">Temporal & Analytics</div>
+        <a href="/timeline" class="nav-link {% if active_page == 'timeline' %}active{% endif %}" id="nav-timeline">
+          <i class="fa-solid fa-clock-rotate-left"></i>
+          <span>Campaign Timeline</span>
+        </a>
+        <a href="/risk" class="nav-link {% if active_page == 'risk' %}active{% endif %}" id="nav-risk">
+          <i class="fa-solid fa-triangle-exclamation"></i>
+          <span>Risk Matrix Engine</span>
+        </a>
+        <a href="/sources" class="nav-link {% if active_page == 'sources' %}active{% endif %}" id="nav-sources">
+          <i class="fa-solid fa-database"></i>
+          <span>Dark Web Sources</span>
+        </a>
+
+        <div class="nav-category">Outputs & Admin</div>
+        <a href="/reports" class="nav-link {% if active_page == 'reports' %}active{% endif %}" id="nav-reports">
+          <i class="fa-solid fa-file-contract"></i>
+          <span>Reports & Export</span>
+        </a>
+        <a href="/settings" class="nav-link {% if active_page == 'settings' %}active{% endif %}" id="nav-settings">
+          <i class="fa-solid fa-sliders"></i>
+          <span>System Settings</span>
+        </a>
+      </div>
+
+      <div class="sidebar-footer">
+        <div class="system-mode-badge">
+          <div class="pulse-dot"></div>
+          <div>
+            <div style="font-weight: 600; color: #fff; font-size: 0.78rem;">SOC Engine Active</div>
+            <div style="font-size: 0.65rem; color: var(--text-muted); font-family: var(--font-mono);">Probabilistic Attribution</div>
+          </div>
+        </div>
+      </div>
+    </aside>
+
+    <!-- Main Wrapper -->
+    <div class="main-wrapper">
+      
+      <!-- Top Navigation Bar -->
+      <header class="topbar">
+        <div class="topbar-left">
+          <button class="sidebar-toggle-btn" id="sidebar-toggle" title="Toggle Sidebar">
+            <i class="fa-solid fa-bars"></i>
+          </button>
+          
+          <div class="topbar-search">
+            <i class="fa-solid fa-magnifying-glass"></i>
+            <input type="text" id="global-search-input" placeholder="Search actor, handle, crypto wallet, PGP fingerprint... (Press '/' to search)">
+            <kbd class="search-kbd">/</kbd>
+          </div>
+        </div>
+
+        <div class="topbar-right">
+          <!-- DEFCON Status Tag -->
+          <div class="defcon-badge" title="National Cyber Threat Alert Level">
+            <span class="defcon-ping"></span>
+            <span class="defcon-label">DEFCON 2</span>
+            <span class="defcon-text">ELEVATED WATCH</span>
+          </div>
+
+          <!-- Live Military Zulu Clock -->
+          <div class="military-clock-badge font-mono" id="military-clock">
+            <i class="fa-regular fa-clock" style="color: var(--cyber-cyan);"></i>
+            <span id="military-clock-time">00:00:00 UTC</span>
+          </div>
+
+          <!-- Official Classification Tag -->
+          <span class="classification-tag">
+            <i class="fa-solid fa-shield-virus"></i>
+            NTRO DEFENSE INTEL
+          </span>
+
+          <!-- Analyst Profile Badge -->
+          <div class="user-profile-badge" title="Authenticated Threat Analyst">
+            <div class="user-avatar-wrap">
+              <div class="user-avatar">AS</div>
+              <span class="avatar-online-dot"></span>
+            </div>
+            <div class="user-info">
+              <div class="user-name">Arjun Sharma</div>
+              <div class="user-role">Lead SOC Investigator</div>
+            </div>
+          </div>
+        </div>
+      </header>
+
+      <!-- Defensive Intelligence Alert Ribbon -->
+      <div class="defensive-alert-banner">
+        <div class="alert-content">
+          <i class="fa-solid fa-shield-halved" style="color: var(--cyber-cyan);"></i>
+          <span><strong>DEFENSIVE INTELLIGENCE SYSTEM:</strong> De-anonymization metrics are computed as mathematical probabilistic correlations. Operating on synthetic demonstration telemetry.</span>
+        </div>
+        <div class="alert-meta font-mono">
+          <span>NTRO PS-26151</span> • <span style="color: var(--cyber-emerald);">CYBER MATRIX // ACTIVE</span>
+        </div>
+      </div>
+
+      <!-- Main Content Block -->
+      <main class="content-wrapper">
+        {% block content %}{% endblock %}
+      </main>
+
+    </div>
+  </div>
+
+  <!-- Toast Notification Container -->
+  <div id="toast-container"></div>
+
+  <!-- Common Main JS Script -->
+  <script src="{{ url_for('static', filename='js/main.js') }}"></script>
+  {% block extra_js %}{% endblock %}
+</body>
+</html>

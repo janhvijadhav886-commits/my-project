@@ -1,0 +1,15 @@
+{% extends "auth_base.html" %}
+{% block title %}Sign In | NTRO Secure Access{% endblock %}
+{% block content %}
+<div class="auth-heading"><span class="step-tag">01 / VERIFY</span><h2>Welcome back, analyst.</h2><p>Enter your credentials to resume the intelligence brief.</p></div>
+<form class="auth-form" data-auth-form="login" novalidate>
+  <label for="login-email">Email ID or username</label>
+  <div class="input-wrap"><i class="fa-regular fa-envelope"></i><input id="login-email" name="email" type="text" placeholder="analyst@ntro.gov.in" autocomplete="username" required></div>
+  <label for="login-password">Password</label>
+  <div class="input-wrap"><i class="fa-solid fa-key"></i><input id="login-password" name="password" type="password" placeholder="Enter your secure password" autocomplete="current-password" required><button class="password-toggle" type="button" aria-label="Show password"><i class="fa-regular fa-eye"></i></button></div>
+  <div class="form-row"><label class="check-label"><input type="checkbox" name="remember"><span>Keep session active</span></label><a href="/forgot-password">Forgot password?</a></div>
+  <button class="auth-submit" type="submit"><span>Sign in to command</span><i class="fa-solid fa-arrow-right"></i></button>
+  <p class="auth-switch">New to the workspace? <a href="/register">Create analyst profile <i class="fa-solid fa-arrow-up-right-from-square"></i></a></p>
+  <div class="demo-hint"><i class="fa-solid fa-terminal"></i><span>Demo access: <b>arjun.sharma@ntro.gov.in</b> / <b>Ntro@Cyber2026</b></span></div>
+</form>
+{% endblock %}

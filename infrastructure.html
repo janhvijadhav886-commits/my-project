@@ -1,0 +1,149 @@
+{% extends "base.html" %}
+
+{% block title %}Passive Infrastructure Telemetry | NTRO Threat Intel{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">
+      <i class="fa-solid fa-server"></i>
+      Passive Infrastructure Observables & Telemetry
+    </h1>
+    <p class="page-subtitle">Passive observation of darknet exit relays, TLS certificate fingerprints, and fast-flux C2 nodes</p>
+  </div>
+  <div>
+    <span class="status-badge status-active">Passive Sensors Online</span>
+  </div>
+</div>
+
+<!-- Filters Bar -->
+<div class="cyber-card" style="margin-bottom: 20px; padding: 16px;">
+  <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between;">
+    <div style="flex: 1; min-width: 260px; position: relative;">
+      <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+      <input type="text" id="infra-search-input" placeholder="Search IP, Onion address, JA3 hash, cert subject, banner..." 
+        style="width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 8px 12px 8px 36px; color: #fff; font-size: 0.85rem; outline: none;">
+    </div>
+
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <select id="infra-type-filter" style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 8px 12px; border-radius: 6px; font-size: 0.82rem; outline: none;">
+        <option value="all">All Indicator Types</option>
+        <option value="IPv4 Address">IPv4 Address</option>
+        <option value="Onion v3 Address">Onion v3 Address</option>
+        <option value="JA3 TLS Fingerprint">JA3 TLS Fingerprint</option>
+        <option value="Favicon Hash (Murmur3)">Favicon Hash</option>
+        <option value="SSH Host Key Fingerprint">SSH Host Key</option>
+        <option value="Domain Name">Domain Name</option>
+        <option value="TLS Certificate SHA256">TLS Certificate SHA256</option>
+      </select>
+
+      <button id="infra-refresh-btn" class="btn-cyber-outline btn-sm">
+        <i class="fa-solid fa-arrows-rotate"></i> Refresh
+      </button>
+    </div>
+  </div>
+</div>
+
+<!-- Passive Infrastructure Table -->
+<div class="cyber-card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fa-solid fa-network-wired"></i>
+      Observed Infrastructure Nodes (<span id="infra-count-badge">0</span>)
+    </div>
+    <div style="font-size: 0.75rem; color: var(--text-muted);">
+      No active scanning performed • Passive DNS & TLS Telemetry
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="cyber-table">
+      <thead>
+        <tr>
+          <th>Indicator Type</th>
+          <th>Indicator Value</th>
+          <th>Service Banner</th>
+          <th>Certificate Subject</th>
+          <th>Clearnet Association</th>
+          <th>Descriptor Status</th>
+          <th>ASN & Country</th>
+          <th>Confidence</th>
+          <th>Source</th>
+        </tr>
+      </thead>
+      <tbody id="infra-table-body">
+        <tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading passive infrastructure indicators...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  fetchInfrastructure();
+
+  const search = document.getElementById('infra-search-input');
+  const typeFilter = document.getElementById('infra-type-filter');
+  const refreshBtn = document.getElementById('infra-refresh-btn');
+
+  if (search) search.addEventListener('input', debounce(fetchInfrastructure, 300));
+  if (typeFilter) typeFilter.addEventListener('change', fetchInfrastructure);
+  if (refreshBtn) refreshBtn.addEventListener('click', fetchInfrastructure);
+});
+
+function debounce(func, wait) {
+  let timeout;
+  return function(...args) {
+    clearTimeout(timeout);
+    timeout = setTimeout(() => func.apply(this, args), wait);
+  };
+}
+
+async function fetchInfrastructure() {
+  const s = document.getElementById('infra-search-input')?.value.trim() || '';
+  const itype = document.getElementById('infra-type-filter')?.value || 'all';
+  const tbody = document.getElementById('infra-table-body');
+  const countBadge = document.getElementById('infra-count-badge');
+
+  try {
+    const params = new URLSearchParams();
+    if (s) params.append('search', s);
+    if (itype !== 'all') params.append('type', itype);
+
+    const res = await fetch(`/api/infrastructure?${params.toString()}`);
+    const result = await res.json();
+    const data = result.data || [];
+
+    if (countBadge) countBadge.innerText = data.length;
+
+    if (data.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 30px;">No passive infrastructure matches found.</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = data.map(item => `
+      <tr>
+        <td><span class="font-mono" style="font-size: 0.78rem; color: var(--cyber-purple);">${item.indicator_type}</span></td>
+        <td>
+          <div class="font-mono" style="color: var(--cyber-cyan); font-weight: 600; font-size: 0.82rem;">${item.indicator_value}</div>
+          <div style="font-size: 0.7rem; color: var(--text-muted);">${item.exposed_status_page_indicator || ''}</div>
+        </td>
+        <td style="font-size: 0.75rem; color: var(--text-secondary); max-width: 200px;">${item.service_banner || 'N/A'}</td>
+        <td style="font-size: 0.75rem; color: var(--text-muted);">${item.certificate_subject || 'N/A'}</td>
+        <td><span class="font-mono" style="font-size: 0.75rem; color: var(--cyber-amber);">${item.clearnet_association || 'Darknet Only'}</span></td>
+        <td><span class="status-badge status-active" style="font-size: 0.72rem;">${item.descriptor_status}</span></td>
+        <td style="font-size: 0.75rem;">${item.asn_organization || 'Decentralized'} <br><span style="color: var(--text-muted);">${item.hosting_country || ''}</span></td>
+        <td class="font-mono" style="font-size: 0.8rem; font-weight: 700;">${item.confidence}%</td>
+        <td style="font-size: 0.72rem; color: var(--text-muted);">${item.source}</td>
+      </tr>
+    `).join('');
+
+  } catch (e) {
+    console.error(e);
+    tbody.innerHTML = `<tr><td colspan="9" style="text-align: center; color: var(--cyber-crimson); padding: 20px;">Failed to load infrastructure data.</td></tr>`;
+  }
+}
+</script>
+{% endblock %}

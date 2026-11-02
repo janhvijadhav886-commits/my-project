@@ -1,0 +1,17 @@
+{% extends "auth_base.html" %}
+{% block title %}Create Profile | NTRO Secure Access{% endblock %}
+{% block content %}
+<div class="auth-heading"><span class="step-tag">02 / ENROL</span><h2>Create your analyst profile.</h2><p>Set up a verified identity for the defensive intelligence workspace.</p></div>
+<form class="auth-form" data-auth-form="register" novalidate>
+  <label for="register-name">Full name</label>
+  <div class="input-wrap"><i class="fa-regular fa-id-card"></i><input id="register-name" name="name" type="text" placeholder="Your name" autocomplete="name" required></div>
+  <label for="register-email">Email ID</label>
+  <div class="input-wrap"><i class="fa-regular fa-envelope"></i><input id="register-email" name="email" type="email" placeholder="name@ntro.gov.in" autocomplete="email" required></div>
+  <label for="register-password">Create password</label>
+  <div class="input-wrap"><i class="fa-solid fa-key"></i><input id="register-password" name="password" type="password" placeholder="Minimum 8 characters" minlength="8" autocomplete="new-password" required><button class="password-toggle" type="button" aria-label="Show password"><i class="fa-regular fa-eye"></i></button></div>
+  <div class="password-meter"><span></span><span></span><span></span><span></span><small>Use 8+ characters with mixed case and a number</small></div>
+  <label class="check-label consent"><input type="checkbox" required><span>I agree to the synthetic environment access policy.</span></label>
+  <button class="auth-submit" type="submit"><span>Initialize profile</span><i class="fa-solid fa-arrow-right"></i></button>
+  <p class="auth-switch">Already have access? <a href="/login">Return to sign in <i class="fa-solid fa-arrow-up-right-from-square"></i></a></p>
+</form>
+{% endblock %}

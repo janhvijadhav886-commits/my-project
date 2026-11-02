@@ -1,0 +1,125 @@
+{% extends "base.html" %}
+
+{% block title %}Intelligence Sources & Ingestion Feeds | NTRO Threat Intel{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">
+      <i class="fa-solid fa-database"></i>
+      Intelligence Sources, Feeds & Provenance
+    </h1>
+    <p class="page-subtitle">Passive data collection pipelines, dark web forum metadata scrapers, blockchain indexers, and reliability scores</p>
+  </div>
+  <div>
+    <span class="status-badge status-active">6 Active Ingestion Streams</span>
+  </div>
+</div>
+
+<div class="cyber-card" style="margin-bottom: 24px;">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fa-solid fa-tower-broadcast"></i> Monitored Threat Intelligence Feeds
+    </div>
+    <div style="font-size: 0.75rem; color: var(--text-muted);">Continuous Passive Pipeline</div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="cyber-table">
+      <thead>
+        <tr>
+          <th>Source Name</th>
+          <th>Source Type</th>
+          <th>Reliability Score</th>
+          <th>Ingestion Pipeline</th>
+          <th>Telemetry URL / Sensor</th>
+          <th>Description</th>
+          <th>Status</th>
+        </tr>
+      </thead>
+      <tbody id="sources-table-body">
+        <tr><td colspan="7" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading intelligence source pipelines...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+
+<!-- Data Ingestion Architecture Card -->
+<div class="cyber-card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fa-solid fa-diagram-next"></i> Passive Ingestion Architecture
+    </div>
+  </div>
+  <div style="display: grid; grid-template-columns: repeat(auto-fit, minmax(240px, 1fr)); gap: 16px;">
+    
+    <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-card); border-radius: 6px; padding: 16px;">
+      <div style="font-size: 0.85rem; font-weight: 700; color: var(--cyber-cyan); margin-bottom: 6px;">
+        <i class="fa-solid fa-comments"></i> 1. Forum & Market Metadata
+      </div>
+      <p style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4;">
+        Passive harvesting of public user profiles, PGP key listings, escrow ratings, and timestamp distribution patterns on underground forums.
+      </p>
+    </div>
+
+    <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-card); border-radius: 6px; padding: 16px;">
+      <div style="font-size: 0.85rem; font-weight: 700; color: var(--cyber-emerald); margin-bottom: 6px;">
+        <i class="fa-solid fa-link"></i> 2. Blockchain Transaction Graph
+      </div>
+      <p style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4;">
+        Multi-hop peel-chain clustering, coinjoin analysis, and cross-chain bridge liquidity tracking on public Bitcoin and Monero nodes.
+      </p>
+    </div>
+
+    <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-card); border-radius: 6px; padding: 16px;">
+      <div style="font-size: 0.85rem; font-weight: 700; color: var(--cyber-purple); margin-bottom: 6px;">
+        <i class="fa-solid fa-network-wired"></i> 3. TLS & DNS Telemetry
+      </div>
+      <p style="font-size: 0.78rem; color: var(--text-secondary); line-height: 1.4;">
+        Certificate Transparency monitoring, JA3/JA3S fingerprint matching, and passive DNS resolution history on bulletproof ASNs.
+      </p>
+    </div>
+
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', async () => {
+  const tbody = document.getElementById('sources-table-body');
+  try {
+    const res = await fetch('/api/sources');
+    const sources = (await res.json()).data || [];
+    
+    if (sources.length === 0) {
+      tbody.innerHTML = `<tr><td colspan="7" style="text-align:center; padding: 20px;">No sources available</td></tr>`;
+      return;
+    }
+
+    tbody.innerHTML = sources.map(s => `
+      <tr>
+        <td><strong style="color: #fff;">${s.source_name}</strong></td>
+        <td><span class="font-mono" style="font-size: 0.78rem; color: var(--cyber-purple);">${s.source_type}</span></td>
+        <td>
+          <div style="display: flex; align-items: center; gap: 6px;">
+            <div style="width: 50px; height: 6px; background: rgba(255,255,255,0.1); border-radius: 3px; overflow: hidden;">
+              <div style="width: ${s.reliability_score}%; height: 100%; background: var(--cyber-emerald);"></div>
+            </div>
+            <span class="font-mono" style="font-size: 0.78rem; font-weight: 700; color: #fff;">${s.reliability_score}%</span>
+          </div>
+        </td>
+        <td style="font-size: 0.78rem; color: var(--text-secondary);">${s.ingestion_method}</td>
+        <td><span class="font-mono" style="font-size: 0.75rem; color: var(--cyber-cyan);">${s.source_url}</span></td>
+        <td style="font-size: 0.75rem; color: var(--text-secondary); max-width: 280px;">${s.description}</td>
+        <td><span class="status-badge status-active">Operational</span></td>
+      </tr>
+    `).join('');
+
+  } catch (err) {
+    console.error(err);
+    tbody.innerHTML = `<tr><td colspan="7" style="text-align: center; color: var(--cyber-crimson); padding: 20px;">Failed to load sources.</td></tr>`;
+  }
+});
+</script>
+{% endblock %}

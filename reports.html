@@ -1,0 +1,81 @@
+{% extends "base.html" %}
+
+{% block title %}Intelligence Reports & Dossier Generator | NTRO Threat Intel{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">
+      <i class="fa-solid fa-file-contract"></i>
+      Threat Intelligence Dossiers & Reports
+    </h1>
+    <p class="page-subtitle">Export comprehensive executive threat briefs and forensic intelligence packages in CSV, JSON, and PDF formats</p>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1fr 2fr; gap: 24px;">
+
+  <!-- Left: Select Actor to Generate Dossier -->
+  <div class="cyber-card">
+    <div class="card-header">
+      <div class="card-title">
+        <i class="fa-solid fa-file-pen"></i> Dossier Generator
+      </div>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 6px;">Select Target Threat Actor</label>
+      <select id="report-actor-select" style="width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 10px; color: #fff; font-size: 0.85rem; outline: none;">
+        <option value="">-- Choose Target Actor --</option>
+      </select>
+    </div>
+
+    <div style="margin-bottom: 20px;">
+      <label style="display: block; font-size: 0.78rem; color: var(--text-muted); text-transform: uppercase; margin-bottom: 8px;">Dossier Inclusions</label>
+      <div style="display: flex; flex-direction: column; gap: 8px; font-size: 0.82rem; color: var(--text-secondary);">
+        <label><input type="checkbox" checked disabled> Actor Narrative & Risk Score</label>
+        <label><input type="checkbox" checked disabled> Associated Forum Handles & PGP Keys</label>
+        <label><input type="checkbox" checked disabled> Cryptocurrency Wallet Clusters</label>
+        <label><input type="checkbox" checked disabled> Passive Infrastructure Indicators</label>
+        <label><input type="checkbox" checked disabled> Persona Stylometric Linkages</label>
+        <label><input type="checkbox" checked disabled> Chronological Attack Timeline</label>
+        <label><input type="checkbox" checked disabled> Multi-Source Evidentiary Trail</label>
+      </div>
+    </div>
+
+    <div style="display: flex; flex-direction: column; gap: 10px;">
+      <a id="btn-export-html" href="#" target="_blank" class="btn-cyber" style="justify-content: center;">
+        <i class="fa-solid fa-print"></i> Generate Printable Dossier (PDF)
+      </a>
+      <a id="btn-export-json" href="#" class="btn-cyber-outline" style="justify-content: center;">
+        <i class="fa-solid fa-file-code"></i> Download JSON Intelligence Pack
+      </a>
+      <a id="btn-export-csv" href="#" class="btn-cyber-outline" style="justify-content: center;">
+        <i class="fa-solid fa-file-csv"></i> Export Structured CSV Summary
+      </a>
+    </div>
+  </div>
+
+  <!-- Right: Live Preview Panel -->
+  <div class="cyber-card">
+    <div class="card-header">
+      <div class="card-title">
+        <i class="fa-solid fa-eye"></i> Dossier Executive Summary Preview
+      </div>
+      <span class="classification-tag">OFFICIAL DEFENSIVE INTEL</span>
+    </div>
+
+    <div id="report-preview-container" style="font-size: 0.85rem; color: var(--text-secondary); line-height: 1.6;">
+      <div style="text-align: center; padding: 60px 20px; color: var(--text-muted);">
+        <i class="fa-solid fa-file-invoice" style="font-size: 2.5rem; margin-bottom: 14px; display: block; color: var(--border-glow);"></i>
+        Select a threat actor from the dropdown to preview intelligence dossier sections.
+      </div>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/reports.js') }}"></script>
+{% endblock %}

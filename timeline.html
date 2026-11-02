@@ -1,0 +1,76 @@
+{% extends "base.html" %}
+
+{% block title %}Intelligence Timeline & Temporal Trail | NTRO Threat Intel{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">
+      <i class="fa-solid fa-clock-rotate-left"></i>
+      Temporal Attack Trail & Intelligence Events
+    </h1>
+    <p class="page-subtitle">Chronological progression of threat actor forum registrations, wallet linkings, exploit disclosures, and infrastructure deployments</p>
+  </div>
+  <div>
+    <button class="btn-cyber-outline btn-sm" id="btn-timeline-refresh">
+      <i class="fa-solid fa-arrows-rotate"></i> Refresh Events
+    </button>
+  </div>
+</div>
+
+<!-- Filters Bar -->
+<div class="cyber-card" style="margin-bottom: 24px; padding: 16px;">
+  <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between;">
+    
+    <!-- Actor Selector -->
+    <div style="display: flex; gap: 10px; align-items: center; flex: 1; min-width: 250px;">
+      <label style="font-size: 0.8rem; color: var(--text-muted); text-transform: uppercase;">Filter Entity:</label>
+      <select id="timeline-actor-filter" style="flex: 1; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 8px 12px; border-radius: 6px; font-size: 0.82rem; outline: none;">
+        <option value="all">All Monitored Threat Actors</option>
+      </select>
+    </div>
+
+    <!-- Event Type Filter -->
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <select id="timeline-type-filter" style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 8px 12px; border-radius: 6px; font-size: 0.82rem; outline: none;">
+        <option value="all">All Event Types</option>
+        <option value="First Seen">First Seen</option>
+        <option value="Handle changes">Handle changes</option>
+        <option value="Marketplace activity">Marketplace activity</option>
+        <option value="Wallet association">Wallet association</option>
+        <option value="Infrastructure observations">Infrastructure observations</option>
+        <option value="Persona linkage">Persona linkage</option>
+        <option value="Exploit Release">Exploit Release</option>
+        <option value="Ransom Demand">Ransom Demand</option>
+      </select>
+
+      <select id="timeline-severity-filter" style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 8px 12px; border-radius: 6px; font-size: 0.82rem; outline: none;">
+        <option value="all">All Severities</option>
+        <option value="Critical">Critical</option>
+        <option value="High">High</option>
+        <option value="Medium">Medium</option>
+        <option value="Low">Low</option>
+      </select>
+    </div>
+
+  </div>
+</div>
+
+<!-- Timeline Stream Container -->
+<div class="cyber-card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fa-solid fa-list-timeline"></i> Chronological Activity Trail (<span id="timeline-count-badge">0</span>)
+    </div>
+    <span style="font-size: 0.75rem; color: var(--text-muted);">Newest Observations First</span>
+  </div>
+
+  <div id="timeline-feed-list" style="display: flex; flex-direction: column; gap: 16px; padding: 10px 0;">
+    <div style="text-align: center; color: var(--text-muted); padding: 40px;">Loading chronological timeline events...</div>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/timeline.js') }}"></script>
+{% endblock %}

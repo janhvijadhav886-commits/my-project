@@ -1,0 +1,158 @@
+{% extends "base.html" %}
+
+{% block title %}System Settings & Diagnostics | NTRO Threat Intel{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">
+      <i class="fa-solid fa-sliders"></i>
+      System Configuration & Database Diagnostics
+    </h1>
+    <p class="page-subtitle">Inspect database connections, Supabase credentials, analytical engine statuses, and reset demo datasets</p>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 1.2fr 1fr; gap: 24px;">
+
+  <!-- Left: Database & Backend Engine Status -->
+  <div style="display: flex; flex-direction: column; gap: 20px;">
+    
+    <div class="cyber-card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-server"></i> Database Connection Status
+        </div>
+        <span class="status-badge status-active" id="db-mode-badge">Active</span>
+      </div>
+
+      <div style="display: flex; flex-direction: column; gap: 12px; font-size: 0.82rem; margin-bottom: 20px;">
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--text-muted);">Operational Engine:</span>
+          <strong style="color: #fff;" id="setting-db-mode">--</strong>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--text-muted);">Supabase PostgreSQL Configured:</span>
+          <span class="font-mono" id="setting-supabase-configured" style="font-weight: 700;">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--text-muted);">Supabase URL:</span>
+          <span class="font-mono" id="setting-supabase-url" style="color: var(--cyber-cyan); font-size: 0.75rem;">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--text-muted);">Threat Actor Records Loaded:</span>
+          <span class="font-mono" id="setting-total-actors" style="color: #fff;">--</span>
+        </div>
+        <div style="display: flex; justify-content: space-between;">
+          <span style="color: var(--text-muted);">Passive Indicators Ingested:</span>
+          <span class="font-mono" id="setting-total-infra" style="color: #fff;">--</span>
+        </div>
+      </div>
+
+      <div style="display: flex; gap: 10px;">
+        <button id="btn-reset-demo" class="btn-cyber-outline" style="border-color: var(--cyber-amber); color: var(--cyber-amber);">
+          <i class="fa-solid fa-arrow-rotate-left"></i> Reset Synthetic Demo Dataset
+        </button>
+      </div>
+    </div>
+
+    <!-- Defensive Safeguards Info -->
+    <div class="cyber-card">
+      <div class="card-header">
+        <div class="card-title">
+          <i class="fa-solid fa-shield-halved" style="color: var(--cyber-cyan);"></i> Defensive Intelligence Architecture
+        </div>
+      </div>
+      <p style="font-size: 0.8rem; color: var(--text-secondary); line-height: 1.5; margin-bottom: 12px;">
+        In strict alignment with NTRO guidelines and cybersecurity defense ethics, this platform exclusively models passive indicators 
+        (e.g., DNS history, TLS certificates, darknet forum signatures, and public blockchain transactions).
+      </p>
+      <div style="background: rgba(0,0,0,0.3); border: 1px solid var(--border-card); border-radius: 6px; padding: 12px; font-size: 0.75rem; color: var(--text-muted);">
+        <strong style="color: #fff;">Ethical Safeguards Implemented:</strong>
+        <ul style="padding-left: 16px; margin-top: 6px; line-height: 1.5;">
+          <li>Zero active intrusive scanning or exploitation modules.</li>
+          <li>Probabilistic attribution confidence scoring instead of absolute identity claims.</li>
+          <li>Synthetic demonstration data protecting operational privacy.</li>
+        </ul>
+      </div>
+    </div>
+
+  </div>
+
+  <!-- Right: Supabase Setup Guide -->
+  <div class="cyber-card">
+    <div class="card-header">
+      <div class="card-title">
+        <i class="fa-solid fa-bolt" style="color: var(--cyber-emerald);"></i> Supabase Live Integration Setup
+      </div>
+    </div>
+
+    <div style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5; display: flex; flex-direction: column; gap: 14px;">
+      <p>
+        The platform operates out of the box in <strong>High-Fidelity Synthetic In-Memory Mode</strong> for offline hackathon evaluations.
+      </p>
+
+      <p>To connect your live <strong>Supabase PostgreSQL</strong> cloud instance:</p>
+
+      <ol style="padding-left: 18px; display: flex; flex-direction: column; gap: 8px;">
+        <li>Create a free project at <a href="https://supabase.com" target="_blank" style="color: var(--cyber-cyan);">supabase.com</a>.</li>
+        <li>Open the <strong>SQL Editor</strong> in your Supabase dashboard and run <code style="color: var(--cyber-cyan);">schema.sql</code> and <code style="color: var(--cyber-cyan);">seed.sql</code>.</li>
+        <li>Go to <strong>Project Settings ➔ API</strong> and copy your <em>Project URL</em> and <em>anon public key</em>.</li>
+        <li>Create a <code style="color: var(--cyber-amber);">.env</code> file in your project root with:</li>
+      </ol>
+
+      <pre style="background: rgba(0,0,0,0.6); padding: 12px; border-radius: 6px; font-size: 0.72rem; font-family: var(--font-mono); color: var(--cyber-cyan); border: 1px solid var(--border-subtle); overflow-x: auto;">
+SUPABASE_URL=https://your-project.supabase.co
+SUPABASE_KEY=your-supabase-publishable-key
+SECRET_KEY=cyber-soc-ntro-secret-key-2026</pre>
+
+      <p style="font-size: 0.75rem; color: var(--text-muted);">
+        Upon restart with <code style="color: #fff;">python app.py</code>, the backend will automatically connect to Supabase PostgreSQL.
+      </p>
+    </div>
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script>
+document.addEventListener('DOMContentLoaded', () => {
+  loadSystemStatus();
+
+  const resetBtn = document.getElementById('btn-reset-demo');
+  if (resetBtn) {
+    resetBtn.addEventListener('click', async () => {
+      try {
+        const res = await fetch('/api/system/reset-demo', { method: 'POST' });
+        const result = await res.json();
+        if (result.status === 'success') {
+          if (window.showToast) window.showToast('Synthetic demonstration dataset reset successfully', 'success');
+          loadSystemStatus();
+        }
+      } catch (e) {
+        if (window.showToast) window.showToast('Failed to reset demo dataset', 'danger');
+      }
+    });
+  }
+});
+
+async function loadSystemStatus() {
+  try {
+    const res = await fetch('/api/system/status');
+    const result = await res.json();
+    const data = result.data || {};
+
+    document.getElementById('setting-db-mode').innerText = data.mode || 'In-Memory Engine';
+    document.getElementById('setting-supabase-configured').innerText = data.supabase_configured ? 'YES (Live Supabase Active)' : 'NO (Using In-Memory Fallback)';
+    document.getElementById('setting-supabase-configured').style.color = data.supabase_configured ? 'var(--cyber-emerald)' : 'var(--cyber-amber)';
+    document.getElementById('setting-supabase-url').innerText = data.supabase_url || 'Not configured';
+    document.getElementById('setting-total-actors').innerText = data.total_threat_actors || 0;
+    document.getElementById('setting-total-infra').innerText = data.total_infrastructure_indicators || 0;
+
+  } catch (e) {
+    console.error(e);
+  }
+}
+</script>
+{% endblock %}

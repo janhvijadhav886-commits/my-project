@@ -1,0 +1,108 @@
+{% extends "base.html" %}
+
+{% block title %}Threat Actors Directory | NTRO Threat Actor Intelligence{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">
+      <i class="fa-solid fa-user-secret"></i>
+      Threat Actor Directory & Profiles
+    </h1>
+    <p class="page-subtitle">Central repository of monitored dark web threat clusters, operational handles, and passive footprints</p>
+  </div>
+  <div style="display: flex; gap: 10px;">
+    <a href="/relationships" class="btn-cyber-outline">
+      <i class="fa-solid fa-diagram-project"></i> View Network Graph
+    </a>
+  </div>
+</div>
+
+<!-- Filters Bar -->
+<div class="cyber-card" style="margin-bottom: 20px; padding: 16px;">
+  <div style="display: flex; flex-wrap: wrap; gap: 14px; align-items: center; justify-content: space-between;">
+    
+    <!-- Search Input -->
+    <div style="flex: 1; min-width: 260px; position: relative;">
+      <i class="fa-solid fa-magnifying-glass" style="position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text-muted);"></i>
+      <input type="text" id="actor-filter-search" placeholder="Filter by handle, code, wallet address, PGP fingerprint..." 
+        style="width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 8px 12px 8px 36px; color: #fff; font-size: 0.85rem; outline: none;">
+    </div>
+
+    <!-- Risk Filter -->
+    <div style="display: flex; gap: 10px; align-items: center;">
+      <select id="actor-filter-risk" style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 8px 12px; border-radius: 6px; font-size: 0.82rem; outline: none;">
+        <option value="all">All Risk Levels</option>
+        <option value="critical">Critical (80-100)</option>
+        <option value="high">High (60-79)</option>
+        <option value="medium">Medium (30-59)</option>
+        <option value="low">Low (0-29)</option>
+      </select>
+
+      <!-- Category Filter -->
+      <select id="actor-filter-category" style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 8px 12px; border-radius: 6px; font-size: 0.82rem; outline: none;">
+        <option value="all">All Threat Categories</option>
+        <option value="Ransomware Affiliate">Ransomware Affiliate</option>
+        <option value="Initial Access Broker">Initial Access Broker</option>
+        <option value="Bulletproof Hosting Provider">Bulletproof Hosting Provider</option>
+        <option value="Illicit Finance & Mixing">Illicit Finance & Mixing</option>
+        <option value="Exploit Developer">Exploit Developer</option>
+        <option value="Data Broker & Exfiltration">Data Broker & Exfiltration</option>
+        <option value="Carding Ring Operator">Carding Ring Operator</option>
+        <option value="Supply Chain Threat Actor">Supply Chain Threat Actor</option>
+      </select>
+
+      <!-- Status Filter -->
+      <select id="actor-filter-status" style="background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); color: var(--text-primary); padding: 8px 12px; border-radius: 6px; font-size: 0.82rem; outline: none;">
+        <option value="all">All Statuses</option>
+        <option value="Active">Active</option>
+        <option value="Monitored">Monitored</option>
+        <option value="Dormant">Dormant</option>
+      </select>
+
+      <button id="reset-actor-filters" class="btn-cyber-outline btn-sm" title="Clear all filters">
+        <i class="fa-solid fa-xmark"></i> Clear
+      </button>
+    </div>
+
+  </div>
+</div>
+
+<!-- Actors Data Table -->
+<div class="cyber-card">
+  <div class="card-header">
+    <div class="card-title">
+      <i class="fa-solid fa-list-check"></i>
+      Identified Threat Clusters (<span id="actor-count-label">0</span>)
+    </div>
+    <div style="font-size: 0.75rem; color: var(--text-muted);">
+      Click any actor to inspect 11-tab intelligence dossier
+    </div>
+  </div>
+
+  <div class="table-responsive">
+    <table class="cyber-table">
+      <thead>
+        <tr>
+          <th>Actor Code</th>
+          <th>Primary Handle</th>
+          <th>Threat Category</th>
+          <th>Risk Score</th>
+          <th>Attribution Confidence</th>
+          <th>Status</th>
+          <th>First Seen</th>
+          <th>Last Seen</th>
+          <th style="text-align: right;">Actions</th>
+        </tr>
+      </thead>
+      <tbody id="actors-table-body">
+        <tr><td colspan="9" style="text-align: center; color: var(--text-muted); padding: 30px;">Loading threat actor directory...</td></tr>
+      </tbody>
+    </table>
+  </div>
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/actors.js') }}"></script>
+{% endblock %}

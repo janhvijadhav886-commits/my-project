@@ -1,0 +1,90 @@
+{% extends "base.html" %}
+
+{% block title %}Attribution Relationship Graph | NTRO Threat Intel{% endblock %}
+
+{% block content %}
+<div class="page-header">
+  <div>
+    <h1 class="page-title">
+      <i class="fa-solid fa-diagram-project"></i>
+      Attribution & Entity Relationship Graph
+    </h1>
+    <p class="page-subtitle">Interactive topological mapping connecting threat actors, darknet aliases, crypto wallets, and passive infrastructure</p>
+  </div>
+  <div style="display: flex; gap: 10px;">
+    <button class="btn-cyber-outline btn-sm" id="btn-graph-fit"><i class="fa-solid fa-compress"></i> Fit View</button>
+    <button class="btn-cyber-outline btn-sm" id="btn-graph-layout"><i class="fa-solid fa-shuffle"></i> Rearrange</button>
+  </div>
+</div>
+
+<div style="display: grid; grid-template-columns: 3fr 1fr; gap: 20px;">
+
+  <!-- Main Graph Canvas Container -->
+  <div class="cyber-card" style="padding: 0; position: relative; overflow: hidden;">
+    
+    <!-- Graph Canvas -->
+    <div id="cy-container"></div>
+
+    <!-- Graph Controls Overlay -->
+    <div class="graph-controls">
+      <button class="btn-cyber-outline btn-sm" id="btn-zoom-in" title="Zoom In"><i class="fa-solid fa-plus"></i></button>
+      <button class="btn-cyber-outline btn-sm" id="btn-zoom-out" title="Zoom Out"><i class="fa-solid fa-minus"></i></button>
+      <button class="btn-cyber-outline btn-sm" id="btn-reset-view" title="Reset View"><i class="fa-solid fa-arrows-to-circle"></i></button>
+    </div>
+
+    <!-- Node Color Legend Overlay -->
+    <div class="graph-legend">
+      <div class="legend-item"><div class="legend-dot" style="background: #00f0ff;"></div> Threat Actor</div>
+      <div class="legend-item"><div class="legend-dot" style="background: #38bdf8;"></div> Handle</div>
+      <div class="legend-item"><div class="legend-dot" style="background: #f59e0b;"></div> PGP Key</div>
+      <div class="legend-item"><div class="legend-dot" style="background: #10b981;"></div> Wallet</div>
+      <div class="legend-item"><div class="legend-dot" style="background: #8b5cf6;"></div> Marketplace</div>
+      <div class="legend-item"><div class="legend-dot" style="background: #ec4899;"></div> Infrastructure</div>
+    </div>
+
+  </div>
+
+  <!-- Evidence & Node Inspector Sidebar -->
+  <div style="display: flex; flex-direction: column; gap: 16px;">
+    
+    <!-- Search / Filter in Graph -->
+    <div class="cyber-card" style="padding: 16px;">
+      <div class="card-title" style="margin-bottom: 12px; font-size: 0.9rem;">
+        <i class="fa-solid fa-filter"></i> Graph Filter & Search
+      </div>
+      <input type="text" id="graph-search-node" placeholder="Find node by name..." 
+        style="width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 7px 10px; color: #fff; font-size: 0.8rem; outline: none; margin-bottom: 10px;">
+      
+      <select id="graph-edge-filter" style="width: 100%; background: rgba(0,0,0,0.4); border: 1px solid var(--border-subtle); border-radius: 6px; padding: 7px 10px; color: var(--text-primary); font-size: 0.8rem; outline: none;">
+        <option value="all">All Relationship Edges</option>
+        <option value="Uses Handle">Uses Handle</option>
+        <option value="Owns PGP Key">Owns PGP Key</option>
+        <option value="Associated Wallet">Associated Wallet</option>
+        <option value="Active On Marketplace">Active On Marketplace</option>
+        <option value="Related Infrastructure">Related Infrastructure</option>
+        <option value="Potential Persona Link">Potential Persona Link</option>
+        <option value="Trust Relationship">Trust Relationship</option>
+      </select>
+    </div>
+
+    <!-- Inspector Panel -->
+    <div class="cyber-card" id="graph-inspector-card" style="flex: 1; padding: 18px;">
+      <div class="card-title" style="margin-bottom: 12px; font-size: 0.9rem;">
+        <i class="fa-solid fa-magnifying-glass-chart"></i> Entity & Evidence Inspector
+      </div>
+      <div id="inspector-content" style="font-size: 0.82rem; color: var(--text-secondary); line-height: 1.5;">
+        <div style="text-align: center; padding: 40px 10px; color: var(--text-muted);">
+          <i class="fa-solid fa-hand-pointer" style="font-size: 1.8rem; margin-bottom: 12px; color: var(--border-glow);"></i>
+          <p>Click any node or relationship edge in the graph canvas to inspect attribution telemetry and evidence trail.</p>
+        </div>
+      </div>
+    </div>
+
+  </div>
+
+</div>
+{% endblock %}
+
+{% block extra_js %}
+<script src="{{ url_for('static', filename='js/graph.js') }}"></script>
+{% endblock %}
